@@ -65,6 +65,8 @@ function draw() {
     }
     drawExplosion();
   }
+  frameCount < 150 &&
+    text("Oprime ↑ y ↓ para ver la magia", width / 20, height / 10);
 }
 
 /**
