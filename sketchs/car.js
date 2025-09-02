@@ -1,11 +1,10 @@
-const body = document.getElementsByTagName("body")[0];
+const container = document.getElementById("canvas-container");
+
 let cars = [];
-let car;
-let car1;
-let car2;
 
 function setup() {
-  createCanvas(body.offsetWidth, body.offsetHeight);
+  cnv = createCanvas(container.offsetWidth, container.offsetHeight);
+  cnv.parent("canvas-container");
   const carAmount = 20;
   for (let i = 0; i < carAmount; i++) {
     cars.push(

@@ -1,8 +1,8 @@
 /**
- * Reference to the body element for dynamic canvas sizing.
+ * Reference to the div element for dynamic canvas sizing.
  * @type {HTMLElement}
  */
-const body = document.getElementsByTagName("body")[0];
+const container = document.getElementById("canvas-container");
 
 /**
  * Color palette for harmonious colors used in the scene.
@@ -43,7 +43,8 @@ let increaseLimit;
  * p5.js setup function. Initializes canvas and drawing settings.
  */
 function setup() {
-  cnv = createCanvas(body.offsetWidth, body.offsetHeight);
+  cnv = createCanvas(container.offsetWidth, container.offsetHeight);
+  cnv.parent("canvas-container");
   sunHeight = 120;
   increaseLimit = height * 2;
   noStroke();
