@@ -39,6 +39,8 @@ let sunHeight = 0;
 
 let increaseLimit;
 
+let keyHaveBeenPress = false;
+
 /**
  * p5.js setup function. Initializes canvas and drawing settings.
  */
@@ -66,8 +68,12 @@ function draw() {
     }
     drawExplosion();
   }
-  frameCount < 150 &&
-    text("Oprime ↑ y ↓ para ver la magia", width / 20, height / 10);
+  !keyHaveBeenPress &&
+    text(
+      "Oprime ↑ y ↓ para ver la magia \nCualquier tecla para ocultar texto\ns: guardar",
+      width / 20,
+      height / 10
+    );
 }
 
 /**
@@ -83,6 +89,9 @@ function keyPressed() {
 const saveImage = () => {
   if (key === "s") {
     save(cnv, "sketch_1");
+  }
+  if (!keyHaveBeenPress) {
+    keyHaveBeenPress = true;
   }
   //  else if (key === "j") {
   //   img.save("rockies.jpg");
