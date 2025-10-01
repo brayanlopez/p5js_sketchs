@@ -41,6 +41,9 @@ let increaseLimit;
 
 let keyHaveBeenPress = false;
 
+const cactusCoordinates = [];
+const clouds = [];
+
 /**
  * p5.js setup function. Initializes canvas and drawing settings.
  */
@@ -48,8 +51,22 @@ function setup() {
   cnv = createCanvas(container.offsetWidth, container.offsetHeight);
   cnv.parent("canvas-container");
   sunHeight = 120;
-  increaseLimit = height * 2;
+  increaseLimit = height * 3;
   noStroke();
+
+  // create cactus array
+  for (let i = 0; i < 7; i++) {
+    cactusCoordinates.push({
+      x: random(0, width),
+      y: random(height * 0.8, height * 0.95),
+      size: random(5, 50),
+    });
+  }
+
+  // Create clouds
+  for (let i = 0; i < 10; i++) {
+    clouds.push(new Cloud(random(0, width), random(0, height * 0.5)));
+  }
 }
 
 /**
@@ -58,8 +75,21 @@ function setup() {
 function draw() {
   if (sunHeight < increaseLimit) {
     drawGradientBackground();
+
+    drawCloud(mouseX, mouseY);
+
+    clouds.forEach((cloud) => {
+      cloud.draw();
+      cloud.move();
+    });
+
     drawSun();
     drawMountains();
+    drawSandGround();
+    cactusCoordinates.forEach((cactus) =>
+      drawCactus(cactus.x, height * 0.8, cactus.size)
+    );
+
     animationLogic();
   } else {
     if (!explosionTriggered) {
@@ -99,6 +129,62 @@ const saveImage = () => {
   //   img.save("rockies", "png");
   // }
 };
+
+function drawCloud(x, y) {
+  fill(255); // White color for the cloud
+  ellipse(x, y, 80, 60);
+  ellipse(x - 40, y + 10, 60, 50);
+  ellipse(x + 40, y + 10, 60, 50);
+  ellipse(x - 20, y - 20, 60, 50);
+  ellipse(x + 20, y - 20, 60, 50);
+}
+
+function drawSandGround() {
+  // Draw sand-colored rectangle at the bottom
+  fill(194, 178, 128); // Sandy beige color
+  const sandHeight = height * 0.9;
+  rect(0, sandHeight, width, height * 0.25);
+}
+
+function drawCactus(x, y, size = 10) {
+  fill(34, 139, 34); // Dark green cactus color
+  // rect(x, y, 1, 1);
+  noStroke();
+
+  // Main body
+  rect(x, y, size, (size * 8) / 3, 10); // Rounded corners
+
+  // Left arm
+  rect(x - (size * 2) / 3, y + (size * 4) / 3, (size * 2) / 3, size / 2, 10);
+  rect(x - size / 3, y + (size * 25) / 30, size / 2, (size * 2) / 3, 10);
+
+  // Right arm
+  rect(x + size, y + (size * 2) / 3, size / 2, (size * 4) / 3, 10);
+
+  // Add some vertical lines to simulate cactus ribs
+  stroke(0, 100, 0);
+  strokeWeight(2);
+  for (let i = 0; i < size / 6; i++) {
+    let xpos = x + i * 6;
+    line(xpos, y, xpos, y + (size * 8) / 3);
+  }
+
+  // Lines on arms
+  line(
+    x - (size * 5) / 30,
+    y + (size * 25) / 30,
+    x - (size * 5) / 30,
+    y + (size * 55) / 30
+  );
+  line(
+    x + (size * 37) / 30,
+    y + (size * 2) / 3,
+    x + (size * 37) / 30,
+    y + size * 2
+  );
+
+  noStroke();
+}
 
 /**
  * Draws a vertical gradient background using the palette colors.
@@ -255,4 +341,28 @@ function drawExplosion() {
   // if (explosionParticles.length === 0) {
   //   noLoop();
   // }
+}
+
+class Cloud {
+  constructor(x, y, size = null) {
+    this.x = x;
+    this.y = y;
+    this.size = size || random(20, 60);
+    this.speed = random(0.2, 1);
+  }
+
+  draw() {
+    // TODO: make responsive to size param.
+    fill(255); // White color for the cloud
+    ellipse(this.x, this.y, 80, 60);
+    ellipse(this.x - 40, this.y + 10, 60, 50);
+    ellipse(this.x + 40, this.y + 10, 60, 50);
+    ellipse(this.x - 20, this.y - 20, 60, 50);
+    ellipse(this.x + 20, this.y - 20, 60, 50);
+  }
+
+  move() {
+    this.x += this.speed;
+    if (this.x > width + 100) this.x = -100;
+  }
 }
