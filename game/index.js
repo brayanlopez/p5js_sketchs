@@ -1,36 +1,9 @@
+import { gameSettings, gravitySettings, platforms, player } from "./utils.mjs";
+
 const container = document.getElementById("canvas-container");
 
-const gameSettings = {
-  stage: 0,
-};
-
-const gravitySettings = {
-  direction: 1,
-  velocity: 9,
-  failingSpeed: 9,
-  minHeight: 0,
-  maxHeight: 0,
-};
-
-const player = {
-  x: 0,
-  y: 0,
-  velocity: 10,
-  jump: false,
-  jumpPower: 13,
-  jumpCounter: 0,
-  width: 50,
-  height: 50,
-  color: "#ff0000",
-};
-
-const platforms = [
-  { x: 0, y: 350, width: 200, height: 20, color: "#00ff00" },
-  { x: 400, y: 270, width: 200, height: 20, color: "#00ff00" },
-];
-
 function setup() {
-  cnv = createCanvas(container.offsetWidth, container.offsetHeight);
+  let cnv = createCanvas(container.offsetWidth, container.offsetHeight);
   cnv.parent("canvas-container");
   background("#000");
   rectMode(CENTER);
@@ -44,64 +17,9 @@ function draw() {
   if (gameSettings.stage === 0) {
     applyGravity();
     drawStage0();
-    if (keyIsDown(LEFT_ARROW)) {
-      player.x -= player.velocity;
-    }
-    if (keyIsDown(RIGHT_ARROW)) {
-      player.x += player.velocity;
-    }
-  }
-  if (keyIsDown(65)) {
-    player.jump = true;
-  } else {
-    player.jump = false;
+    playerMovement();
   }
 }
-
-const drawStage0 = () => {
-  // Appearance of the game
-  background(150, 230, 240);
-
-  // grass
-  noStroke();
-  fill(100, 200, 75);
-  rect(width / 2, height - 50, width, 100);
-
-  // Player
-  stroke(0);
-  strokeWeight(5);
-  fill(player.color);
-  rect(player.x, player.y, player.width, player.height);
-
-  platforms.forEach((platform) => {
-    fill(platform.color);
-    rect(
-      platform.x + platform.width / 2,
-      platform.y + platform.height / 2,
-      platform.width,
-      platform.height
-    );
-  });
-
-  // Collisions
-  platforms.forEach((platform) => {
-    if (
-      player.x + player.width / 2 > platform.x &&
-      player.x - player.width / 2 < platform.x + platform.width &&
-      player.y + player.height / 2 > platform.y &&
-      player.y + player.height / 2 < platform.y + platform.height
-    ) {
-      player.y = platform.y - player.height / 2;
-      player.jumpCounter = 0;
-    }
-  });
-
-  // Score
-  noStroke();
-  fill(0);
-  textSize(32);
-  text("Score: 0", width - 100, 50);
-};
 
 // function keyPressed() {
 //   if (key === "a") {
@@ -119,6 +37,52 @@ const drawStage0 = () => {
 //     player.jump = false;
 //   }
 // }
+
+const drawStage0 = () => {
+  // Appearance of the game
+  background(150, 230, 240);
+
+  // grass
+  noStroke();
+  fill(100, 200, 75);
+  rect(width / 2, height - 50, width, 100);
+
+  // Player
+  stroke(0);
+  strokeWeight(2);
+  fill(player.color);
+  rect(player.x, player.y, player.width, player.height);
+
+  platforms.forEach((platform) => {
+    fill(platform.color);
+    rect(
+      platform.x + platform.width / 2,
+      platform.y + platform.height / 2,
+      platform.width,
+      platform.height
+    );
+  });
+
+  // Collisions
+  // TODO: check this, the pivot is on the center of the player and this can made more hard to calculate and work.
+  platforms.forEach((platform) => {
+    if (
+      player.x + player.width / 2 > platform.x &&
+      player.x - player.width / 2 < platform.x + platform.width &&
+      player.y + player.height / 2 > platform.y &&
+      player.y + player.height / 2 < platform.y + platform.height
+    ) {
+      player.y = platform.y - player.height / 2;
+      player.jumpCounter = 0;
+    }
+  });
+
+  // Score
+  noStroke();
+  fill(0);
+  textSize(32);
+  text(`Score: ${gameSettings.score}`, width - 100, 50);
+};
 
 const applyGravity = () => {
   if (player.y >= gravitySettings.minHeight && player.jump === false) {
@@ -148,3 +112,29 @@ const applyGravity = () => {
     gravitySettings.velocity = gravitySettings.failingSpeed;
   }
 };
+
+const playerMovement = () => {
+  if (keyIsDown(LEFT_ARROW)) {
+    player.x -= player.velocity;
+  }
+  if (keyIsDown(RIGHT_ARROW)) {
+    player.x += player.velocity;
+  }
+  if (keyIsDown(65)) {
+    player.jump = true;
+  } else {
+    player.jump = false;
+  }
+
+  // Code to make the player appear on the other side of the screen
+  if (player.x + player.width < 0) {
+    player.x = width + player.width / 2;
+  }
+  if (player.x - player.width > width) {
+    player.x = 0 - player.width / 2;
+  }
+};
+
+// Added this to make it work with modules
+window.setup = setup;
+window.draw = draw;
