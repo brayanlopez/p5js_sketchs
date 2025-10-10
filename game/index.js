@@ -1,6 +1,18 @@
-import { gameSettings, gravitySettings, platforms, player } from "./utils.mjs";
+import {
+  coins,
+  gameSettings,
+  gravitySettings,
+  isColliding,
+  platforms,
+  player,
+  Player,
+} from "./utils.mjs";
 
 const container = document.getElementById("canvas-container");
+
+let mario, cuberos, brick, jumpSound, gameFont, coinSprite;
+
+let isCuberos = false;
 
 function setup() {
   let cnv = createCanvas(container.offsetWidth, container.offsetHeight);
@@ -8,6 +20,7 @@ function setup() {
   background("#000");
   rectMode(CENTER);
   textAlign(CENTER);
+  imageMode(CENTER);
   player.x = width / 2;
   player.y = height - 100 - player.height / 2;
   gravitySettings.minHeight = height - 100;
@@ -15,20 +28,34 @@ function setup() {
 
 function draw() {
   if (gameSettings.stage === 0) {
+    splashScreen();
+  } else if (gameSettings.stage === 1) {
+    gameSettings.totalTime = millis();
+    drawStage();
     applyGravity();
-    drawStage0();
     playerMovement();
+  } else if (gameSettings.stage === 3) {
+    gameOverScreen();
   }
 }
 
-// function keyPressed() {
-//   if (key === "a") {
-//     player.x -= 5;
-//   }
-//   if (key === "d") {
-//     player.x += 5;
-//   }
-// }
+function preload() {
+  mario = loadImage("./game/public/img/8bit_Mario.png");
+  cuberos = loadImage("./game/public/img/icon.jpeg");
+  brick = loadImage("./game/public/img/mario_bricks.jpeg");
+  jumpSound = loadSound("./game/public/Mario-jump-sound.mp3");
+  gameFont = loadFont("./game/public/smbfont.ttf");
+  coinSprite = loadImage("./game/public/img/mario_coin.png");
+}
+
+function keyPressed() {
+  if (key === "p") {
+    isCuberos = !isCuberos;
+  }
+  if (keyCode === ENTER && gameSettings.stage === 0) {
+    gameSettings.stage = 1;
+  }
+}
 
 // function keyTyped() {
 //   if (key === "a") {
@@ -38,7 +65,7 @@ function draw() {
 //   }
 // }
 
-const drawStage0 = () => {
+const drawStage = () => {
   // Appearance of the game
   background(150, 230, 240);
 
@@ -48,19 +75,50 @@ const drawStage0 = () => {
   rect(width / 2, height - 50, width, 100);
 
   // Player
-  stroke(0);
-  strokeWeight(2);
-  fill(player.color);
-  rect(player.x, player.y, player.width, player.height);
+  // stroke(0);
+  // strokeWeight(2);
+  // fill(player.color);
+  // rect(player.x, player.y, player.width, player.height);
+  image(
+    isCuberos ? cuberos : mario,
+    player.x,
+    player.y,
+    player.width,
+    isCuberos ? player.height - 50 : player.height
+  );
 
   platforms.forEach((platform) => {
     fill(platform.color);
-    rect(
+    // rect(
+    //   platform.x + platform.width / 2,
+    //   platform.y + platform.height / 2,
+    //   platform.width,
+    //   platform.height
+    // );
+    image(
+      brick,
       platform.x + platform.width / 2,
       platform.y + platform.height / 2,
       platform.width,
       platform.height
     );
+  });
+
+  coins.forEach((coin) => {
+    if (coin.status === "active") {
+      image(
+        coinSprite,
+        coin.x + coin.width / 2,
+        coin.y + coin.height / 2,
+        coin.width,
+        coin.height
+      );
+    }
+    if (isColliding(player, coin) && coin.status === "active") {
+      coin.status = "inactive";
+      gameSettings.score++;
+    }
+    // isColliding(player, coin)
   });
 
   // Collisions
@@ -72,16 +130,35 @@ const drawStage0 = () => {
       player.y + player.height / 2 > platform.y &&
       player.y + player.height / 2 < platform.y + platform.height
     ) {
+      // if (isColliding(player, platform)) {
       player.y = platform.y - player.height / 2;
       player.jumpCounter = 0;
     }
   });
 
-  // Score
+  // Enemy
+  const enemy = new Player(width - 100, height - 100, 50, 50, "#ff0000");
+  rect(enemy.x, enemy.y, enemy.width, enemy.height);
+  if (isColliding(player, enemy)) {
+    player.lives--;
+    player.resetPosition();
+  }
+  if (player.lives === 0) {
+    gameSettings.stage = 3;
+  }
+
+  // ui
   noStroke();
   fill(0);
   textSize(32);
-  text(`Score: ${gameSettings.score}`, width - 100, 50);
+  textFont(gameFont);
+
+  text(`Lives: ${player.lives}`, width / 9 - 80, 50);
+
+  text(`Score: ${gameSettings.score}`, width / 9, 50);
+
+  // Lives
+  text(`Lives: ${int(gameSettings.totalTime / 1000)}`, width - 100, 50);
 };
 
 const applyGravity = () => {
@@ -93,7 +170,7 @@ const applyGravity = () => {
   }
   if (player.jump) {
     if (
-      player.y <= gravitySettings.maxHeight ||
+      player.y <= gravitySettings.maxHeight - 200 ||
       player.jumpCounter > player.jumpPower
     ) {
       if (player.y >= gravitySettings.minHeight) {
@@ -102,6 +179,7 @@ const applyGravity = () => {
       gravitySettings.direction = 1;
       gravitySettings.velocity = gravitySettings.failingSpeed;
     } else {
+      // jumpSound.play();
       gravitySettings.direction = -1;
       gravitySettings.velocity = player.jumpPower;
       player.jumpCounter++;
@@ -135,6 +213,54 @@ const playerMovement = () => {
   }
 };
 
+const splashScreen = () => {
+  // Appearance of the game
+  background(150, 230, 240);
+
+  // grass
+  noStroke();
+  fill(100, 200, 75);
+  rect(width / 2, height - 50, width, 100);
+
+  // Title
+  textFont(gameFont);
+  fill(255);
+  stroke(0);
+  strokeWeight(10);
+  textSize(100);
+  text("Cuberos", width / 2, height / 2);
+  textSize(40);
+  text(
+    "Press enter to play \nmove with arrows \njump with 'a', change with 'p'",
+    width / 2,
+    height / 2 + 50
+  );
+};
+
+const winScreen = () => {
+  // Title
+  textFont(gameFont);
+  fill(255);
+  stroke(0);
+  strokeWeight(10);
+  textSize(200);
+  text("You Win", width / 2, height / 2);
+  textSize(100);
+  text("Congratulations", width / 2, height / 2 + 100);
+};
+
+const gameOverScreen = () => {
+  // Title
+  textFont(gameFont);
+  fill(255);
+  stroke(0);
+  strokeWeight(10);
+  textSize(200);
+  text("You Lose", width / 2, height / 2);
+};
+
 // Added this to make it work with modules
+window.preload = preload;
 window.setup = setup;
 window.draw = draw;
+window.keyPressed = keyPressed;
