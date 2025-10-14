@@ -35,6 +35,9 @@ function draw() {
     drawPlayer();
   } else if (gameSettings.stage === SCENES.LEVEL_3) {
     drawNEA();
+    drawPlayer();
+  } else if (gameSettings.stage === SCENES.WIN) {
+    winScreen();
   }
 }
 
@@ -62,6 +65,8 @@ function keyPressed() {
   }
   if (keyCode === ENTER && gameSettings.stage === SCENES.LEVEL_2) {
     gameSettings.stage = SCENES.LEVEL_3;
+  } else if (keyCode === ENTER && gameSettings.stage === SCENES.LEVEL_3) {
+    gameSettings.stage = SCENES.WIN;
   }
 }
 
