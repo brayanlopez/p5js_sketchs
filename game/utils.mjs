@@ -1,4 +1,4 @@
-class GameObject {
+export class GameObject {
   constructor(x, y, width, height, color, status = "active") {
     this.x = x;
     this.y = y;
@@ -36,8 +36,18 @@ export class Player extends GameObject {
   }
 }
 
+export const SCENES = {
+  SPLASH: "SPLASH",
+  GAME: "GAME",
+  PAUSE: "PAUSE",
+  GAME_OVER: "GAME_OVER",
+  LEVEL_1: "LEVEL_1",
+  LEVEL_2: "LEVEL_2",
+  LEVEL_3: "LEVEL_3",
+};
+
 export const gameSettings = {
-  stage: 1,
+  stage: SCENES.SPLASH,
   totalTime: undefined,
   score: 0,
 };

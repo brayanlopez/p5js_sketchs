@@ -1,12 +1,5 @@
-import {
-  coins,
-  gameSettings,
-  gravitySettings,
-  isColliding,
-  platforms,
-  player,
-  Player,
-} from "./utils.mjs";
+import { drawClassroom, drawPlayer, drawStage } from "./draws.mjs";
+import { gameSettings, gravitySettings, player, SCENES } from "./utils.mjs";
 
 const container = document.getElementById("canvas-container");
 
@@ -15,7 +8,8 @@ let mario, cuberos, brick, jumpSound, gameFont, coinSprite;
 let isCuberos = false;
 
 function setup() {
-  let cnv = createCanvas(container.offsetWidth, container.offsetHeight);
+  // let cnv = createCanvas(container.offsetWidth, container.offsetHeight);
+  let cnv = createCanvas(1280, 720);
   cnv.parent("canvas-container");
   background("#000");
   rectMode(CENTER);
@@ -27,16 +21,21 @@ function setup() {
 }
 
 function draw() {
-  if (gameSettings.stage === 0) {
-    splashScreen();
-  } else if (gameSettings.stage === 1) {
-    gameSettings.totalTime = millis();
-    drawStage();
-    applyGravity();
-    playerMovement();
-  } else if (gameSettings.stage === 3) {
-    gameOverScreen();
-  }
+  // if (gameSettings.stage === SCENES.SPLASH) {
+  //   splashScreen();
+  // } else if (gameSettings.stage === SCENES.GAME_OVER) {
+  //   gameOverScreen();
+  // } else if (gameSettings.stage === SCENES.LEVEL_1) {
+  //   gameSettings.totalTime = millis();
+  //   drawStage(width, height, mario, brick, coinSprite, gameFont);
+  //   applyGravity();
+  //   playerMovement();
+  // } else if (gameSettings.stage === SCENES.LEVEL_2) {
+  //   drawClassroom();
+  //   drawPlayer();
+  // }
+  drawClassroom();
+  drawPlayer();
 }
 
 function preload() {
@@ -52,8 +51,14 @@ function keyPressed() {
   if (key === "p") {
     isCuberos = !isCuberos;
   }
-  if (keyCode === ENTER && gameSettings.stage === 0) {
-    gameSettings.stage = 1;
+  if (keyCode === ENTER && gameSettings.stage === SCENES.SPLASH) {
+    gameSettings.stage = SCENES.LEVEL_1;
+  }
+  if (keyCode === ENTER && gameSettings.stage === SCENES.GAME_OVER) {
+    gameSettings.stage = SCENES.SPLASH;
+    player.lives = 3;
+    gameSettings.score = 0;
+    player.resetPosition();
   }
 }
 
@@ -64,102 +69,6 @@ function keyPressed() {
 //     player.jump = false;
 //   }
 // }
-
-const drawStage = () => {
-  // Appearance of the game
-  background(150, 230, 240);
-
-  // grass
-  noStroke();
-  fill(100, 200, 75);
-  rect(width / 2, height - 50, width, 100);
-
-  // Player
-  // stroke(0);
-  // strokeWeight(2);
-  // fill(player.color);
-  // rect(player.x, player.y, player.width, player.height);
-  image(
-    isCuberos ? cuberos : mario,
-    player.x,
-    player.y,
-    player.width,
-    isCuberos ? player.height - 50 : player.height
-  );
-
-  platforms.forEach((platform) => {
-    fill(platform.color);
-    // rect(
-    //   platform.x + platform.width / 2,
-    //   platform.y + platform.height / 2,
-    //   platform.width,
-    //   platform.height
-    // );
-    image(
-      brick,
-      platform.x + platform.width / 2,
-      platform.y + platform.height / 2,
-      platform.width,
-      platform.height
-    );
-  });
-
-  coins.forEach((coin) => {
-    if (coin.status === "active") {
-      image(
-        coinSprite,
-        coin.x + coin.width / 2,
-        coin.y + coin.height / 2,
-        coin.width,
-        coin.height
-      );
-    }
-    if (isColliding(player, coin) && coin.status === "active") {
-      coin.status = "inactive";
-      gameSettings.score++;
-    }
-    // isColliding(player, coin)
-  });
-
-  // Collisions
-  // TODO: check this, the pivot is on the center of the player and this can made more hard to calculate and work.
-  platforms.forEach((platform) => {
-    if (
-      player.x + player.width / 2 > platform.x &&
-      player.x - player.width / 2 < platform.x + platform.width &&
-      player.y + player.height / 2 > platform.y &&
-      player.y + player.height / 2 < platform.y + platform.height
-    ) {
-      // if (isColliding(player, platform)) {
-      player.y = platform.y - player.height / 2;
-      player.jumpCounter = 0;
-    }
-  });
-
-  // Enemy
-  const enemy = new Player(width - 100, height - 100, 50, 50, "#ff0000");
-  rect(enemy.x, enemy.y, enemy.width, enemy.height);
-  if (isColliding(player, enemy)) {
-    player.lives--;
-    player.resetPosition();
-  }
-  if (player.lives === 0) {
-    gameSettings.stage = 3;
-  }
-
-  // ui
-  noStroke();
-  fill(0);
-  textSize(32);
-  textFont(gameFont);
-
-  text(`Lives: ${player.lives}`, width / 9 - 80, 50);
-
-  text(`Score: ${gameSettings.score}`, width / 9, 50);
-
-  // Lives
-  text(`Lives: ${int(gameSettings.totalTime / 1000)}`, width - 100, 50);
-};
 
 const applyGravity = () => {
   if (player.y >= gravitySettings.minHeight && player.jump === false) {
@@ -213,6 +122,9 @@ const playerMovement = () => {
   }
 };
 
+/**
+ * @description Splash screen of the game
+ */
 const splashScreen = () => {
   // Appearance of the game
   background(150, 230, 240);
