@@ -64,7 +64,16 @@ export const drawClassroom = () => {
   imageMode(CENTER);
 };
 
+export const drawNEA = () => {
+  // TODO: here will go the code for NEA building
+  background(200);
+  text("NEA Building - To be implemented", width / 2, height / 2);
+};
+
 export const drawPlayer = (x = mouseX, y = mouseY) => {
+  rectMode(CORNER);
+  textAlign(CORNER);
+  imageMode(CORNER);
   ellipseMode(CENTER);
 
   //cuello
@@ -102,10 +111,20 @@ export const drawPlayer = (x = mouseX, y = mouseY) => {
   ellipse(x + 45, y - 113, 18, 12);
   ellipse(x + 7, y - 113, 70, 70);
 
+  //cabello
+  fill("#834f23");
+  rect(x - 26, y - 135, 17, 22, 3);
+
+  //barba
+  fill("#834f23");
+  rect(x + 25, y - 110, 17, 5, 3);
+  rect(x + 25, y - 109, 5, 13, 3);
+  rect(x + 25, y - 98, 12, 9, 2);
+
   //gafas
   fill(0);
-  rect(x + 5, y - 120, 38, 2, 1);
-  rect(x + 40, y - 125, 2, 10, 1);
+  rect(x + 5, y - 120, 38, 3, 1);
+  rect(x + 40, y - 124, 3, 10, 1);
 
   //gorra
   fill("#014BA0");
@@ -122,6 +141,10 @@ export const drawPlayer = (x = mouseX, y = mouseY) => {
   //manga
   fill(255);
   rect(x - 12, y - 64, 27, 30, 10, 10, 0, 0);
+
+  rectMode(CENTER);
+  textAlign(CENTER);
+  imageMode(CENTER);
 };
 
 export const drawStage = (

@@ -1,4 +1,4 @@
-import { drawClassroom, drawPlayer, drawStage } from "./draws.mjs";
+import { drawClassroom, drawNEA, drawPlayer, drawStage } from "./draws.mjs";
 import { gameSettings, gravitySettings, player, SCENES } from "./utils.mjs";
 
 const container = document.getElementById("canvas-container");
@@ -21,21 +21,21 @@ function setup() {
 }
 
 function draw() {
-  // if (gameSettings.stage === SCENES.SPLASH) {
-  //   splashScreen();
-  // } else if (gameSettings.stage === SCENES.GAME_OVER) {
-  //   gameOverScreen();
-  // } else if (gameSettings.stage === SCENES.LEVEL_1) {
-  //   gameSettings.totalTime = millis();
-  //   drawStage(width, height, mario, brick, coinSprite, gameFont);
-  //   applyGravity();
-  //   playerMovement();
-  // } else if (gameSettings.stage === SCENES.LEVEL_2) {
-  //   drawClassroom();
-  //   drawPlayer();
-  // }
-  drawClassroom();
-  drawPlayer();
+  if (gameSettings.stage === SCENES.SPLASH) {
+    splashScreen();
+  } else if (gameSettings.stage === SCENES.GAME_OVER) {
+    gameOverScreen();
+  } else if (gameSettings.stage === SCENES.LEVEL_1) {
+    gameSettings.totalTime = millis();
+    drawStage(width, height, mario, brick, coinSprite, gameFont);
+    applyGravity();
+    playerMovement();
+  } else if (gameSettings.stage === SCENES.LEVEL_2) {
+    drawClassroom();
+    drawPlayer();
+  } else if (gameSettings.stage === SCENES.LEVEL_3) {
+    drawNEA();
+  }
 }
 
 function preload() {
@@ -59,6 +59,9 @@ function keyPressed() {
     player.lives = 3;
     gameSettings.score = 0;
     player.resetPosition();
+  }
+  if (keyCode === ENTER && gameSettings.stage === SCENES.LEVEL_2) {
+    gameSettings.stage = SCENES.LEVEL_3;
   }
 }
 
