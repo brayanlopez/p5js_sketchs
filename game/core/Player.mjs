@@ -59,8 +59,8 @@ export class Player extends GameObject {
     this.isGrounded = false;
   }
 
-  draw() {
-    drawPlayer(this.x, this.y);
+  draw(isWalking = false) {
+    drawPlayer(this.x, this.y, isWalking);
     // stroke(0);
     // strokeWeight(2);
     // fill(this.color);

@@ -53,7 +53,7 @@ initializeDoor();
 
 export const drawScene2 = () => {
   drawClassroom();
-  drawPlayer(player.x, player.y);
+  drawPlayer(player.x, player.y, player.isWalking);
   scene2Logic();
 };
 

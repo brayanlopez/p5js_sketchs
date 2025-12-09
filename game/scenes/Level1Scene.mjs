@@ -15,7 +15,7 @@ export const drawStage = (width, height, brick, coinSprite, gameFont) => {
   rect(width / 2, height - 50, width, 100);
 
   // Player;
-  player.draw();
+  player.draw(player.isWalking);
   // image(mario, player.x, player.y, player.width, player.height);
 
   LEVEL_1.PLATFORMS.forEach((platform) => {

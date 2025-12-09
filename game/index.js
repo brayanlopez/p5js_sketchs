@@ -123,17 +123,24 @@ const applyGravity = () => {
 };
 
 const playerMovement = () => {
+  let isWalking = false;
+  
   if (keyIsDown(LEFT_ARROW)) {
     player.x -= player.velocity;
+    isWalking = true;
   }
   if (keyIsDown(RIGHT_ARROW)) {
     player.x += player.velocity;
+    isWalking = true;
   }
   if (keyIsDown(65)) {
     player.jump = true;
   } else {
     player.jump = false;
   }
+
+  // Store walking state in player object
+  player.isWalking = isWalking;
 
   // Code to make the player appear on the other side of the screen
   if (player.x + player.width < 0) {

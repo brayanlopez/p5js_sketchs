@@ -1,4 +1,4 @@
-export const drawPlayer = (x = mouseX, y = mouseY) => {
+export const drawPlayer = (x = mouseX, y = mouseY, isWalking = false) => {
   rectMode(CORNER);
   textAlign(CORNER);
   imageMode(CORNER);
@@ -63,8 +63,19 @@ export const drawPlayer = (x = mouseX, y = mouseY) => {
   rect(x - 4, y - 6, 13, 15, 5);
 
   //brazo cubierto
-  fill(255);
-  rect(x - 4, y - 37, 12, 35, 5);
+  if (isWalking) {
+    // Walking animation - rotated arm like in test.js
+    push();
+    translate(x, y);
+    rotate(radians(-25));
+    fill(255);
+    rect(8, -34, 12, 35, 5);
+    pop();
+  } else {
+    // Static arm
+    fill(255);
+    rect(x - 4, y - 37, 12, 35, 5);
+  }
 
   //manga
   fill(255);

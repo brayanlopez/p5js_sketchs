@@ -30,7 +30,7 @@ export const resetLevel3 = () => {
 export const drawScene3 = () => {
   drawNEA();
   if (playerVisible) {
-    drawPlayer(player.x, player.y);
+    drawPlayer(player.x, player.y, player.isWalking);
   }
   scene3Logic();
 };
