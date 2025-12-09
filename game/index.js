@@ -16,7 +16,15 @@ import {
 
 import { gameSettings, gravitySettings, player, SCENES } from "./utils.mjs";
 
-let mario, cuberos, brick, jumpSound, gameFont, coinSprite;
+let mario,
+  cuberos,
+  brick,
+  jumpSound,
+  gameFont,
+  coinSprite,
+  yellowBag,
+  microphone,
+  boom;
 
 let isCuberos = false;
 
@@ -44,7 +52,7 @@ function draw() {
     applyGravity();
     playerMovement();
   } else if (gameSettings.stage === SCENES.LEVEL_2) {
-    drawScene2();
+    drawScene2(yellowBag, boom, microphone);
     applyGravity();
     playerMovement();
   } else if (gameSettings.stage === SCENES.LEVEL_3) {
@@ -71,6 +79,9 @@ function preload() {
   jumpSound = loadSound("./game/public/Mario-jump-sound.mp3");
   gameFont = loadFont("./game/public/smbfont.ttf");
   coinSprite = loadImage("./game/public/img/mario_coin.png");
+  yellowBag = loadImage("./game/public/img/maletita.png");
+  boom = loadImage("./game/public/img/boom.png");
+  microphone = loadImage("./game/public/img/radioMicros.png");
 }
 
 function keyPressed() {

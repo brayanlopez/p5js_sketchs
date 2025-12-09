@@ -51,13 +51,13 @@ const initializeDoor = () => {
 // Call initialization
 initializeDoor();
 
-export const drawScene2 = () => {
-  drawClassroom();
+export const drawScene2 = (yellowBag, boom, microphone) => {
+  drawClassroom(yellowBag, boom, microphone);
   drawPlayer(player.x, player.y, player.isWalking);
   scene2Logic();
 };
 
-const drawClassroom = () => {
+const drawClassroom = (yellowBag, boom, microphone) => {
   rectMode(CORNER);
   textAlign(CORNER);
   imageMode(CORNER);
@@ -119,6 +119,10 @@ const drawClassroom = () => {
   //puertas
   drawDoor(mainDoor.x, mainDoor.y, mainDoor.width, mainDoor.height, "109");
   drawDoor(320, 350, 210, 370, "110");
+
+  image(boom, width - 170, height - 250, 200, 200);
+  image(yellowBag, width - 130, height - 150, 100, 100);
+  image(microphone, width - 130, height - 210, 100, 100);
 
   rectMode(CENTER);
   textAlign(CENTER);
