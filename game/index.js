@@ -1,7 +1,14 @@
-import { drawClassroom, drawNEA, drawPlayer, drawStage } from "./draws.mjs";
-import { gameSettings, gravitySettings, player, SCENES } from "./utils.mjs";
+import { drawStage } from "./scenes/Level1Scene.mjs";
+import { drawScene2 } from "./scenes/Level2Scene.mjs";
+import { drawScene3 } from "./scenes/Level3Scene.mjs";
 
-const container = document.getElementById("canvas-container");
+import {
+  gameOverScreen,
+  splashScreen,
+  winScreen,
+} from "./scenes/SceneManager.mjs";
+
+import { gameSettings, gravitySettings, player, SCENES } from "./utils.mjs";
 
 let mario, cuberos, brick, jumpSound, gameFont, coinSprite;
 
@@ -22,20 +29,22 @@ function setup() {
 
 function draw() {
   if (gameSettings.stage === SCENES.SPLASH) {
-    splashScreen();
+    splashScreen(gameFont);
   } else if (gameSettings.stage === SCENES.GAME_OVER) {
     gameOverScreen();
   } else if (gameSettings.stage === SCENES.LEVEL_1) {
     gameSettings.totalTime = millis();
-    drawStage(width, height, mario, brick, coinSprite, gameFont);
+    drawStage(width, height, brick, coinSprite, gameFont);
     applyGravity();
     playerMovement();
   } else if (gameSettings.stage === SCENES.LEVEL_2) {
-    drawClassroom();
-    drawPlayer();
+    drawScene2();
+    applyGravity();
+    playerMovement();
   } else if (gameSettings.stage === SCENES.LEVEL_3) {
-    drawNEA();
-    drawPlayer();
+    drawScene3();
+    applyGravity();
+    playerMovement();
   } else if (gameSettings.stage === SCENES.WIN) {
     winScreen();
   }
@@ -128,55 +137,6 @@ const playerMovement = () => {
   if (player.x - player.width > width) {
     player.x = 0 - player.width / 2;
   }
-};
-
-/**
- * @description Splash screen of the game
- */
-const splashScreen = () => {
-  // Appearance of the game
-  background(150, 230, 240);
-
-  // grass
-  noStroke();
-  fill(100, 200, 75);
-  rect(width / 2, height - 50, width, 100);
-
-  // Title
-  textFont(gameFont);
-  fill(255);
-  stroke(0);
-  strokeWeight(10);
-  textSize(100);
-  text("Cuberos", width / 2, height / 2);
-  textSize(40);
-  text(
-    "Press enter to play \nmove with arrows \njump with 'a', change with 'p'",
-    width / 2,
-    height / 2 + 50
-  );
-};
-
-const winScreen = () => {
-  // Title
-  textFont(gameFont);
-  fill(255);
-  stroke(0);
-  strokeWeight(10);
-  textSize(200);
-  text("You Win", width / 2, height / 2);
-  textSize(100);
-  text("Congratulations", width / 2, height / 2 + 100);
-};
-
-const gameOverScreen = () => {
-  // Title
-  textFont(gameFont);
-  fill(255);
-  stroke(0);
-  strokeWeight(10);
-  textSize(200);
-  text("You Lose", width / 2, height / 2);
 };
 
 // Added this to make it work with modules
