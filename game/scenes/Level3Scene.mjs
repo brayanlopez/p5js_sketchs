@@ -1,37 +1,13 @@
-import { drawPlayer, drawSpaceship } from "./draws.mjs";
+import { drawPlayer } from "./draws.mjs";
 
 import { gameSettings, player, SCENES, isColliding } from "../utils.mjs";
+import { GameObject } from "../core/GameObject.mjs";
 
-// Spaceship state for Level 3
-let spaceship = {
-  x: (1280 / 9) * 8, // Same position as in drawNEA
-  y: 720 - 220, // Same position as in drawNEA
-  width: 200,
-  height: 400,
-  isMoving: false,
-  speed: 5,
-};
-
-let playerVisible = true;
-
-// Reset function to initialize Level 3 state
-export const resetLevel3 = () => {
-  spaceship = {
-    x: (1280 / 9) * 8,
-    y: 720 - 220,
-    width: 200,
-    height: 400,
-    isMoving: false,
-    speed: 5,
-  };
-  playerVisible = true;
-};
+const mainDoor = new GameObject(1290, 400, 90, 320);
 
 export const drawScene3 = () => {
   drawNEA();
-  if (playerVisible) {
-    drawPlayer(player.x, player.y, player.isWalking);
-  }
+  drawPlayer(player.x, player.y, player.isWalking);
   scene3Logic();
 };
 
@@ -86,29 +62,16 @@ export const drawNEA = () => {
   fill("#D4CBB0");
   quad(650, 690, 1280, 690, 1280, 720, 540, 720);
 
-  drawSpaceship(spaceship.x, spaceship.y, spaceship.width, spaceship.height);
-
   rectMode(CENTER);
   textAlign(CENTER);
   imageMode(CENTER);
+
+  // event to go to next level
+  rect(mainDoor.x, mainDoor.y, mainDoor.w, mainDoor.h);
 };
 
 const scene3Logic = () => {
-  // Check collision between player and spaceship
-  if (!spaceship.isMoving && playerVisible && isColliding(player, spaceship)) {
-    // Player collides with spaceship
-    playerVisible = false; // Make player disappear
-    spaceship.isMoving = true; // Start spaceship movement
-  }
-
-  // Move spaceship up if it's moving
-  if (spaceship.isMoving) {
-    spaceship.y -= spaceship.speed;
-
-    // Check if spaceship is off screen (completely disappeared)
-    if (spaceship.y + spaceship.height < 0) {
-      // Load level 4
-      gameSettings.stage = SCENES.LEVEL_4;
-    }
+  if (isColliding(player, mainDoor)) {
+    gameSettings.stage = SCENES.LEVEL_4;
   }
 };

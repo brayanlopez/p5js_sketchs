@@ -1,11 +1,12 @@
 import { drawStage } from "./scenes/Level1Scene.mjs";
 import { drawScene2 } from "./scenes/Level2Scene.mjs";
 import { drawScene3 } from "./scenes/Level3Scene.mjs";
+import { drawScene4 } from "./scenes/Level4Scene.mjs";
 import {
-  drawScene4,
-  keyPressedLevel4,
-  setupLevel4,
-} from "./scenes/Level4Scene.mjs";
+  drawScene5,
+  keyPressedLevel5,
+  setupLevel5,
+} from "./scenes/Level5Scene.mjs";
 
 import {
   gameOverScreen,
@@ -31,7 +32,7 @@ function setup() {
   player.y = height - 100 - player.height / 2;
   gravitySettings.minHeight = height - 100;
 
-  setupLevel4();
+  setupLevel5();
 }
 
 function draw() {
@@ -52,6 +53,10 @@ function draw() {
     playerMovement();
   } else if (gameSettings.stage === SCENES.LEVEL_4) {
     drawScene4();
+    applyGravity();
+    playerMovement();
+  } else if (gameSettings.stage === SCENES.LEVEL_5) {
+    drawScene5();
   } else if (gameSettings.stage === SCENES.WIN) {
     winScreen(gameFont);
   } else if (gameSettings.stage === SCENES.GAME_OVER) {
@@ -87,8 +92,8 @@ function keyPressed() {
     gameSettings.stage = SCENES.WIN;
   }
 
-  if (gameSettings.stage === SCENES.LEVEL_4) {
-    keyPressedLevel4();
+  if (gameSettings.stage === SCENES.LEVEL_5) {
+    keyPressedLevel5();
   }
 }
 
@@ -124,7 +129,7 @@ const applyGravity = () => {
 
 const playerMovement = () => {
   let isWalking = false;
-  
+
   if (keyIsDown(LEFT_ARROW)) {
     player.x -= player.velocity;
     isWalking = true;
