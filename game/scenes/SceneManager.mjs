@@ -25,7 +25,7 @@ export const splashScreen = (gameFont) => {
   );
 };
 
-export const winScreen = () => {
+export const winScreen = (gameFont) => {
   // Title
   textFont(gameFont);
   fill(255);
@@ -37,7 +37,7 @@ export const winScreen = () => {
   text("Congratulations", width / 2, height / 2 + 100);
 };
 
-export const gameOverScreen = () => {
+export const gameOverScreen = (gameFont) => {
   // Title
   textFont(gameFont);
   fill(255);

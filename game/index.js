@@ -1,6 +1,11 @@
 import { drawStage } from "./scenes/Level1Scene.mjs";
 import { drawScene2 } from "./scenes/Level2Scene.mjs";
 import { drawScene3 } from "./scenes/Level3Scene.mjs";
+import {
+  drawScene4,
+  keyPressedLevel4,
+  setupLevel4,
+} from "./scenes/Level4Scene.mjs";
 
 import {
   gameOverScreen,
@@ -25,13 +30,13 @@ function setup() {
   player.x = width / 2;
   player.y = height - 100 - player.height / 2;
   gravitySettings.minHeight = height - 100;
+
+  setupLevel4();
 }
 
 function draw() {
   if (gameSettings.stage === SCENES.SPLASH) {
     splashScreen(gameFont);
-  } else if (gameSettings.stage === SCENES.GAME_OVER) {
-    gameOverScreen();
   } else if (gameSettings.stage === SCENES.LEVEL_1) {
     gameSettings.totalTime = millis();
     drawStage(width, height, brick, coinSprite, gameFont);
@@ -45,8 +50,12 @@ function draw() {
     drawScene3();
     applyGravity();
     playerMovement();
+  } else if (gameSettings.stage === SCENES.LEVEL_4) {
+    drawScene4();
   } else if (gameSettings.stage === SCENES.WIN) {
-    winScreen();
+    winScreen(gameFont);
+  } else if (gameSettings.stage === SCENES.GAME_OVER) {
+    gameOverScreen(gameFont);
   }
 }
 
@@ -77,15 +86,11 @@ function keyPressed() {
   } else if (keyCode === ENTER && gameSettings.stage === SCENES.LEVEL_3) {
     gameSettings.stage = SCENES.WIN;
   }
-}
 
-// function keyTyped() {
-//   if (key === "a") {
-//     player.jump = true;
-//   } else {
-//     player.jump = false;
-//   }
-// }
+  if (gameSettings.stage === SCENES.LEVEL_4) {
+    keyPressedLevel4();
+  }
+}
 
 const applyGravity = () => {
   if (player.y >= gravitySettings.minHeight && player.jump === false) {

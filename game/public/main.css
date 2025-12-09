@@ -12,6 +12,7 @@ body {
 
 canvas {
   display: block;
+  margin: auto;
 }
 
 #content-container {

@@ -79,6 +79,13 @@ export const drawStage = (width, height, brick, coinSprite, gameFont) => {
     gameSettings.stage = SCENES.GAME_OVER;
   }
 
+  drawExit();
+
+  // ui
+  drawUI(gameFont);
+};
+
+const drawExit = () => {
   const door = new Player(width - 100, height - 100, 50, 100, "#00ff00");
   fill(door.color);
   rect(door.x, door.y, door.width, door.height);
@@ -86,8 +93,9 @@ export const drawStage = (width, height, brick, coinSprite, gameFont) => {
   if (isColliding(player, door)) {
     gameSettings.stage = SCENES.LEVEL_2;
   }
+};
 
-  // ui
+const drawUI = (gameFont) => {
   noStroke();
   fill(0);
   textSize(32);
