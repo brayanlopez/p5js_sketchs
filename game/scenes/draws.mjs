@@ -74,3 +74,64 @@ export const drawPlayer = (x = mouseX, y = mouseY) => {
   textAlign(CENTER);
   imageMode(CENTER);
 };
+
+export const drawSpaceship = (x, y, w, h) => {
+  push(); // Save current drawing state
+
+  // Main body (sleek gray hull)
+  fill(180, 190, 200);
+  stroke(100, 110, 120);
+  strokeWeight(2);
+
+  // Draw main triangular body
+  triangle(x, y - h / 2, x - w / 2, y + h / 2, x + w / 2, y + h / 2);
+
+  // Cockpit window (glowing blue)
+  fill(100, 200, 255, 200);
+  noStroke();
+  ellipse(x, y, w * 0.4, h * 0.3);
+
+  // Cockpit highlight (reflection)
+  fill(200, 230, 255, 150);
+  ellipse(x - w * 0.08, y - h * 0.05, w * 0.15, h * 0.1);
+
+  // Wings
+  fill(150, 160, 170);
+  stroke(100, 110, 120);
+  strokeWeight(2);
+
+  // Left wing
+  triangle(
+    x - w / 2,
+    y + h / 4,
+    x - w / 2 - 15,
+    y + h / 2,
+    x - w / 2,
+    y + h / 2
+  );
+
+  // Right wing
+  triangle(
+    x + w / 2,
+    y + h / 4,
+    x + w / 2 + 15,
+    y + h / 2,
+    x + w / 2,
+    y + h / 2
+  );
+
+  // Engine thrusters (3 of them)
+  fill(80, 90, 100);
+  noStroke();
+  rect(x - w / 3, y + h / 2 - 5, w / 6, 8);
+  rect(x + w / 6, y + h / 2 - 5, w / 6, 8);
+  rect(x - w / 12, y + h / 2 - 5, w / 6, 8);
+
+  // Engine glow/flames (optional - looks cool when moving)
+  fill(255, 150, 0, 200);
+  ellipse(x - w / 4, y + h / 2 + 2, 8, 12);
+  ellipse(x + w / 4, y + h / 2 + 2, 8, 12);
+  ellipse(x, y + h / 2 + 2, 8, 12);
+
+  fill(255, 200, 50, 150);
+};

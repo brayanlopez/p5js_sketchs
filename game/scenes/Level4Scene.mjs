@@ -2,6 +2,8 @@
  * @description this is an adaptation of space invaders game
  */
 
+import { drawSpaceship } from "./draws.mjs";
+
 let player;
 let aliens = [];
 let bullets = [];
@@ -50,7 +52,7 @@ export const drawScene4 = () => {
   }
 
   // Draw and move player
-  drawPlayer();
+  drawSpaceship(player.x, player.y, player.w, player.h);
   movePlayer();
 
   // Draw and move aliens
@@ -75,17 +77,10 @@ export const drawScene4 = () => {
     gameOver = true;
   }
 
-  // if (lives <= 0) {
-  //   gameOver = true;
-  // }
+  if (lives <= 0) {
+    gameOver = true;
+  }
 };
-
-function drawPlayer() {
-  fill(0, 255, 0);
-  rect(player.x - player.w / 2, player.y, player.w, player.h);
-  // Gun
-  rect(player.x - 5, player.y - 10, 10, 10);
-}
 
 function movePlayer() {
   if (keyIsDown(LEFT_ARROW) || keyIsDown(65)) {
