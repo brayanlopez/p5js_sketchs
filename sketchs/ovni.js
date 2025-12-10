@@ -43,10 +43,10 @@ function setup() {
   // Initialize OVNI position to center of canvas
   ovni.x = width / 2;
   ovni.y = height / 2;
-  
+
   // Generate stars once for better performance
   generateStars();
-  
+
   // Generate initial enemies
   generateInitialEnemies();
 }
@@ -80,14 +80,14 @@ function draw() {
   drawRays();
 
   drawStars();
-  
+
   // Update ammunition regeneration
   updateAmmoRegen();
-  
+
   // Update and draw enemies
   updateEnemies();
   drawEnemies();
-  
+
   // Draw ammunition progress bar
   drawAmmoBar();
 }
@@ -97,7 +97,7 @@ function mousePressed() {
   if (ovni.shotsFired >= ovni.maxAmmunition) {
     return; // Cannot fire anymore
   }
-  
+
   // Add new ray to the array
   rays.push({
     startX: ovni.x,
@@ -255,51 +255,97 @@ function drawRays() {
   }
 }
 
-// Generate stars once for better performance
-function generateStars() {
-  stars.length = 0; // Clear existing stars
-  for (let i = 0; i < numStars; i++) {
-    stars.push({
-      x: random(width),
-      y: random(height),
-      brightness: random(100, 255),
-      twinkleSpeed: random(0.02, 0.08),
-      size: random(1, 3),
-      twinkleOffset: random(TWO_PI)
-    });
-  }
-}
+class Star {
+  constructor() {
+    this.x = random(width);
+    this.y = random(height);
+    this.brightness = random(100, 255);
+    this.twinkleSpeed = random(0.02, 0.08);
+    this.size = random(1, 3);
+    this.twinkleOffset = random(TWO_PI);
+    this.colorType = floor(random(4)); // 0-3 for different colors
 
-// Draw stars with twinkling effect
-function drawStars() {
-  noStroke();
-  
-  for (let i = 0; i < stars.length; i++) {
-    let star = stars[i];
-    
+    // Movement properties
+    this.vx = random(-0.1, 0.1); // Very slow horizontal movement
+    this.vy = random(-0.1, 0.1); // Very slow vertical movement
+    this.driftSpeed = random(0.01, 0.03); // Subtle drift effect
+    this.driftOffset = random(TWO_PI);
+  }
+
+  // Update star properties with subtle movement
+  update() {
+    // Basic linear movement
+    this.x += this.vx;
+    this.y += this.vy;
+
+    // Add subtle drift using sine waves for organic movement
+    this.x += sin(frameCount * this.driftSpeed + this.driftOffset) * 0.2;
+    this.y += cos(frameCount * this.driftSpeed + this.driftOffset * 1.3) * 0.15;
+
+    // Wrap around screen edges
+    if (this.x < -10) this.x = width + 10;
+    if (this.x > width + 10) this.x = -10;
+    if (this.y < -10) this.y = height + 10;
+    if (this.y > height + 10) this.y = -10;
+  }
+
+  // Draw the star with twinkling effect
+  draw() {
     // Create twinkling effect using sine wave
-    let twinkle = sin(frameCount * star.twinkleSpeed + star.twinkleOffset);
-    let alpha = map(twinkle, -1, 1, star.brightness * 0.3, star.brightness);
-    
-    // Different star colors for variety
-    if (i % 4 === 0) {
-      fill(255, 255, 200, alpha); // Warm white
-    } else if (i % 4 === 1) {
-      fill(200, 220, 255, alpha); // Cool blue
-    } else if (i % 4 === 2) {
-      fill(255, 220, 220, alpha); // Warm pink
-    } else {
-      fill(255, 255, 255, alpha); // Pure white
+    let twinkle = sin(frameCount * this.twinkleSpeed + this.twinkleOffset);
+    let alpha = map(twinkle, -1, 1, this.brightness * 0.3, this.brightness);
+
+    // Set color based on star type
+    noStroke();
+    switch (this.colorType) {
+      case 0:
+        fill(255, 255, 200, alpha); // Warm white
+        break;
+      case 1:
+        fill(200, 220, 255, alpha); // Cool blue
+        break;
+      case 2:
+        fill(255, 220, 220, alpha); // Warm pink
+        break;
+      default:
+        fill(255, 255, 255, alpha); // Pure white
     }
-    
+
     // Draw star as small circle
-    circle(star.x, star.y, star.size);
-    
+    circle(this.x, this.y, this.size);
+
     // Add occasional bright twinkle effect
     if (twinkle > 0.8) {
       fill(255, 255, 255, alpha * 0.5);
-      circle(star.x, star.y, star.size * 2);
+      circle(this.x, this.y, this.size * 2);
     }
+  }
+
+  // Check if star is within screen bounds
+  isOnScreen() {
+    return this.x >= 0 && this.x <= width && this.y >= 0 && this.y <= height;
+  }
+
+  // Reset star position (useful for regenerating off-screen stars)
+  reset() {
+    this.x = random(width);
+    this.y = random(height);
+  }
+}
+
+// Generate stars using OOP approach
+function generateStars() {
+  stars.length = 0; // Clear existing stars
+  for (let i = 0; i < numStars; i++) {
+    stars.push(new Star());
+  }
+}
+
+// Draw all stars using their individual draw methods
+function drawStars() {
+  for (let star of stars) {
+    star.update(); // Update star state
+    star.draw(); // Draw the star
   }
 }
 
@@ -371,12 +417,12 @@ function generateInitialEnemies() {
 
 function spawnEnemy() {
   if (enemies.length >= maxEnemies) return;
-  
+
   // Spawn from edges of screen
   let side = floor(random(4)); // 0=top, 1=right, 2=bottom, 3=left
   let x, y, vx, vy;
-  
-  switch(side) {
+
+  switch (side) {
     case 0: // Top
       x = random(width);
       y = -30;
@@ -402,7 +448,7 @@ function spawnEnemy() {
       vy = random(-1, 1);
       break;
   }
-  
+
   enemies.push({
     x: x,
     y: y,
@@ -413,10 +459,10 @@ function spawnEnemy() {
     color: {
       r: random(150, 255),
       g: random(50, 150),
-      b: random(50, 150)
+      b: random(50, 150),
     },
     rotation: 0,
-    rotationSpeed: random(-0.05, 0.05)
+    rotationSpeed: random(-0.05, 0.05),
   });
 }
 
@@ -427,18 +473,22 @@ function updateEnemies() {
     spawnEnemy();
     enemySpawnTimer = 0;
   }
-  
+
   // Update enemy positions
   for (let i = enemies.length - 1; i >= 0; i--) {
     let enemy = enemies[i];
-    
+
     enemy.x += enemy.vx;
     enemy.y += enemy.vy;
     enemy.rotation += enemy.rotationSpeed;
-    
+
     // Remove enemies that go off screen
-    if (enemy.x < -50 || enemy.x > width + 50 ||
-        enemy.y < -50 || enemy.y > height + 50) {
+    if (
+      enemy.x < -50 ||
+      enemy.x > width + 50 ||
+      enemy.y < -50 ||
+      enemy.y > height + 50
+    ) {
       enemies.splice(i, 1);
     }
   }
@@ -449,28 +499,28 @@ function drawEnemies() {
     push();
     translate(enemy.x, enemy.y);
     rotate(enemy.rotation);
-    
+
     // Enemy body (diamond shape)
     fill(enemy.color.r, enemy.color.g, enemy.color.b, 180);
     stroke(enemy.color.r + 50, enemy.color.g + 50, enemy.color.b + 50);
     strokeWeight(2);
-    
+
     beginShape();
     vertex(0, -enemy.size);
     vertex(enemy.size * 0.7, 0);
     vertex(0, enemy.size);
     vertex(-enemy.size * 0.7, 0);
     endShape(CLOSE);
-    
+
     // Enemy core
     fill(255, 255, 100, 200);
     noStroke();
     circle(0, 0, enemy.size * 0.4);
-    
+
     // Enemy glow
     fill(enemy.color.r, enemy.color.g, enemy.color.b, 50);
     circle(0, 0, enemy.size * 1.5);
-    
+
     pop();
   }
 }
@@ -478,18 +528,18 @@ function drawEnemies() {
 function checkRayEnemyCollision(ray, rayIndex) {
   for (let i = enemies.length - 1; i >= 0; i--) {
     let enemy = enemies[i];
-    
+
     // Check if ray endpoint is near enemy
     let distance = dist(ray.endX, ray.endY, enemy.x, enemy.y);
-    
+
     if (distance < enemy.size) {
       // Hit! Remove enemy and ray
       enemies.splice(i, 1);
       rays.splice(rayIndex, 1);
-      
+
       // Regenerate ammo for destroying enemy
       regenerateAmmo(1);
-      
+
       // Create explosion effect
       createExplosion(enemy.x, enemy.y);
       break;
@@ -506,7 +556,7 @@ function createExplosion(x, y) {
       endX: x + random(-30, 30),
       endY: y + random(-30, 30),
       alpha: 255,
-      life: 30 // Short-lived explosion particles
+      life: 30, // Short-lived explosion particles
     });
   }
 }
@@ -531,23 +581,23 @@ function regenerateAmmo(amount) {
 
 function drawAmmoBar() {
   push();
-  
+
   // Position in upper right corner
   let barX = width - 200;
   let barY = 20;
   let barWidth = 180;
   let barHeight = 20;
-  
+
   // Background bar
   fill(50, 50, 50, 150);
   stroke(100, 100, 100);
   strokeWeight(2);
   rect(barX, barY, barWidth, barHeight, 5);
-  
+
   // Calculate fill percentage
   let fillPercentage = ovni.shotsFired / ovni.maxAmmunition;
   let fillWidth = barWidth * fillPercentage;
-  
+
   // Filled portion (red as ammunition is used)
   noStroke();
   if (fillPercentage < 0.5) {
@@ -558,18 +608,22 @@ function drawAmmoBar() {
     fill(255, 50, 50, 180); // Red when almost empty
   }
   rect(barX, barY, fillWidth, barHeight, 5);
-  
+
   // Remaining ammunition (green)
   fill(50, 255, 50, 100);
   rect(barX + fillWidth, barY, barWidth - fillWidth, barHeight, 5);
-  
+
   // Text label
   fill(255);
   noStroke();
   textAlign(RIGHT, TOP);
   textSize(14);
-  text(`Ammo: ${ovni.ammunition}/${ovni.maxAmmunition}`, width - 10, barY + barHeight + 5);
-  
+  text(
+    `Ammo: ${ovni.ammunition}/${ovni.maxAmmunition}`,
+    width - 10,
+    barY + barHeight + 5
+  );
+
   // Warning text when out of ammo
   if (ovni.ammunition <= 0) {
     fill(255, 100, 100);
@@ -577,6 +631,6 @@ function drawAmmoBar() {
     textSize(12);
     text("OUT OF AMMO!", width - 10, barY + barHeight + 25);
   }
-  
+
   pop();
 }
