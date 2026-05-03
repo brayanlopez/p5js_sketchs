@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Test p5.js</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.min.js"></script>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+      }
+      #canvas-container {
+        width: 100vw;
+        height: 100vh;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="canvas-container"></div>
+    <script>
+      function setup() {
+        let cnv = createCanvas(400, 400);
+        cnv.parent("canvas-container");
+        background(200);
+      }
+
+      function draw() {
+        fill(255, 0, 0);
+        ellipse(mouseX, mouseY, 50, 50);
+      }
+    </script>
+  </body>
+</html>

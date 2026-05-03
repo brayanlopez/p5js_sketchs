@@ -1,21 +1,200 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <meta charset="utf-8" />
+    <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>p5.js Sketches</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
 
-    <title>Sketch</title>
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 20px;
+      }
 
-    <link rel="stylesheet" type="text/css" href="style.css" />
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
 
-    <script src="libraries/p5.min.js"></script>
-    <script src="libraries/p5.sound.min.js"></script>
+      header {
+        text-align: center;
+        color: white;
+        margin-bottom: 40px;
+        padding: 20px;
+      }
+
+      h1 {
+        font-size: 3rem;
+        margin-bottom: 10px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      }
+
+      .subtitle {
+        font-size: 1.2rem;
+        opacity: 0.9;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 20px;
+        margin-top: 30px;
+      }
+
+      .card {
+        background: white;
+        border-radius: 12px;
+        padding: 25px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition:
+          transform 0.3s ease,
+          box-shadow 0.3s ease;
+        cursor: pointer;
+        text-decoration: none;
+        color: inherit;
+        display: block;
+      }
+
+      .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+      }
+
+      .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+      }
+
+      .card-icon {
+        font-size: 3rem;
+        margin-bottom: 15px;
+      }
+
+      .card-title {
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin-bottom: 10px;
+        color: #333;
+      }
+
+      .card-desc {
+        color: #666;
+        line-height: 1.5;
+      }
+
+      .game-badge {
+        display: inline-block;
+        background: #ff6b6b;
+        color: white;
+        padding: 4px 12px;
+        border-radius: 12px;
+        font-size: 0.85rem;
+        margin-top: 10px;
+      }
+
+      .sketch-badge {
+        display: inline-block;
+        background: #4ecdc4;
+        color: white;
+        padding: 4px 12px;
+        border-radius: 12px;
+        font-size: 0.85rem;
+        margin-top: 10px;
+      }
+
+      footer {
+        text-align: center;
+        color: white;
+        margin-top: 50px;
+        padding: 20px;
+        opacity: 0.8;
+      }
+    </style>
   </head>
-
   <body>
-    <main id="content-container">
-      <div id="canvas-container"></div>
-    </main>
-    <script src="sketchs/sun.js"></script>
+    <div class="container">
+      <header>
+        <h1>p5.js Sketches</h1>
+        <p class="subtitle">A collection of creative coding experiments</p>
+      </header>
+
+      <div class="grid">
+        <a href="sketchs/test.html" class="card">
+          <div class="card-icon">&#x1F3A8;</div>
+          <div class="card-title">Pineros Portrait</div>
+          <div class="card-desc">
+            Interactive character drawing that follows your mouse cursor.
+          </div>
+          <span class="sketch-badge">Sketch</span>
+        </a>
+
+        <a href="sketchs/sun.html" class="card">
+          <div class="card-icon">&#x2600;</div>
+          <div class="card-title">Sun Animation</div>
+          <div class="card-desc">
+            Animated sun with clouds, mountains, and cactus. Use arrow keys to
+            control the sun.
+          </div>
+          <span class="sketch-badge">Sketch</span>
+        </a>
+
+        <a href="sketchs/squares.html" class="card">
+          <div class="card-icon">&#x2B1B;</div>
+          <div class="card-title">Interactive Squares</div>
+          <div class="card-desc">
+            Click squares to toggle them. Use keys 0-9 to change grid and
+            colors.
+          </div>
+          <span class="sketch-badge">Sketch</span>
+        </a>
+
+        <a href="sketchs/car.html" class="card">
+          <div class="card-icon">&#x1F697;</div>
+          <div class="card-title">Moving Cars</div>
+          <div class="card-desc">
+            Animated cars moving across the screen with custom sizes.
+          </div>
+          <span class="sketch-badge">Sketch</span>
+        </a>
+
+        <a href="sketchs/ovni.html" class="card">
+          <div class="card-icon">&#x1F6F8;</div>
+          <div class="card-title">OVNI</div>
+          <div class="card-desc">UFO animation with interactive elements.</div>
+          <span class="sketch-badge">Sketch</span>
+        </a>
+
+        <a href="sketchs/memoryGame.html" class="card">
+          <div class="card-icon">&#x1F3B2;</div>
+          <div class="card-title">Memory Game</div>
+          <div class="card-desc">3D memory game with rotating image tiles.</div>
+          <span class="sketch-badge">Sketch</span>
+        </a>
+
+        <a href="game/index.html" class="card">
+          <div class="card-icon">&#x1F3AE;</div>
+          <div class="card-title">Mario Game</div>
+          <div class="card-desc">
+            Platform game inspired by Mario with multiple levels.
+          </div>
+          <span class="game-badge">Game</span>
+        </a>
+      </div>
+
+      <footer>
+        <p>
+          Created with
+          <a href="https://p5js.org/" style="color: white">p5.js</a>
+        </p>
+      </footer>
+    </div>
   </body>
 </html>

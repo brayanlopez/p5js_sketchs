@@ -15,7 +15,7 @@
   "type": "commonjs",
   "main": "index.js",
   "scripts": {
-    "dev": "python -m http.server",
+    "dev": "node serve.js",
     "test": "vitest",
     "test:coverage": "vitest run --coverage",
     "lint": "eslint js/**/*.mjs",

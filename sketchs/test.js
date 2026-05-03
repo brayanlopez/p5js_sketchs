@@ -1,6 +1,7 @@
 const container = document.getElementById("canvas-container");
 
 function setup() {
+  console.log("Setting up test.js sketch");
   let cnv = createCanvas(container.offsetWidth, container.offsetHeight);
   cnv.parent("canvas-container");
 }
@@ -11,7 +12,7 @@ function draw() {
   pineros(mouseX, mouseY);
 }
 
-export function pineros(x, y) {
+function pineros(x, y) {
   //cuello
   noStroke();
   fill("#FFE8CC");

@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Memory Game - p5.js</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.min.js"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        background: #f0f0f0;
+      }
+      #canvas-container {
+        width: 100vw;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .back-link {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        background: white;
+        padding: 10px 20px;
+        border-radius: 8px;
+        text-decoration: none;
+        color: #333;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+      }
+    </style>
+  </head>
+  <body>
+    <a href="../index.html" class="back-link">← Back</a>
+    <div id="canvas-container"></div>
+    <script>
+      let img = null;
+      let shouldRotate = false;
+
+      function preload() {
+        img = loadImage("../sketchs/NRauch_Das_Messen.jpg");
+      }
+
+      function setup() {
+        const container = document.getElementById("canvas-container");
+        let cnv = createCanvas(
+          container.offsetWidth,
+          container.offsetHeight,
+          WEBGL,
+        );
+        cnv.parent("canvas-container");
+      }
+
+      function draw() {
+        background(255);
+        const length = 4;
+        shouldRotate && rotateY(frameCount * 0.015);
+        texture(img);
+        for (let i = 0; i < length; i++) {
+          for (let j = 0; j < length; j++) {
+            rect(
+              (i * width) / length,
+              (j * height) / length,
+              width / length,
+              height / length,
+            );
+          }
+        }
+      }
+
+      function mousePressed() {
+        shouldRotate = !shouldRotate;
+        return false;
+      }
+    </script>
+  </body>
+</html>

@@ -2,6 +2,31 @@ const container = document.getElementById("canvas-container");
 
 let cars = [];
 
+class Car {
+  constructor(x, y, size = 100) {
+    this.x = x;
+    this.y = y;
+    this.size = size;
+  }
+}
+
+const drawCar = (x, y, size) => {
+  const CAR_RADIUS = 20;
+
+  // Car body
+  stroke(0);
+  strokeWeight(1);
+  // The origin (x,y) of the car is on the Top Left corner, you can see if by writing: circle(x, y, 1);
+  rect(x + size / 2, y, size, size / 2, CAR_RADIUS, CAR_RADIUS, 0, 0);
+  rect(x, y + size / 2, size * 2, size / 2, CAR_RADIUS);
+
+  // tires
+  stroke(0);
+  strokeWeight(5);
+  circle(x + size / 2, y + size, size / 3);
+  circle(x + size * 1.5, y + size, size / 3);
+};
+
 function setup() {
   cnv = createCanvas(container.offsetWidth, container.offsetHeight);
   cnv.parent("canvas-container");
@@ -27,29 +52,4 @@ function draw() {
       car.x = -car.size * 2;
     }
   });
-}
-
-const drawCar = (x, y, size) => {
-  const CAR_RADIUS = 20;
-
-  // Car body
-  stroke(0);
-  strokeWeight(1);
-  // The origin (x,y) of the car is on the Top Left corner, you can see if by writing: circle(x, y, 1);
-  rect(x + size / 2, y, size, size / 2, CAR_RADIUS, CAR_RADIUS, 0, 0);
-  rect(x, y + size / 2, size * 2, size / 2, CAR_RADIUS);
-
-  // tires
-  stroke(0);
-  strokeWeight(5);
-  circle(x + size / 2, y + size, size / 3);
-  circle(x + size * 1.5, y + size, size / 3);
-};
-
-class Car {
-  constructor(x, y, size = 100) {
-    this.x = x;
-    this.y = y;
-    this.size = size;
-  }
 }

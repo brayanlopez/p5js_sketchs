@@ -1,5 +1,11 @@
 import { describe, it, expect } from "vitest";
-import { SCENES, gameSettings, gravitySettings, player, isColliding } from "../game/utils.mjs";
+import {
+  SCENES,
+  gameSettings,
+  gravitySettings,
+  player,
+  isColliding,
+} from "../game/utils.mjs";
 
 describe("SCENES", () => {
   it("should have SPLASH scene", () => {

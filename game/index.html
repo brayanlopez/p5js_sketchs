@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mario Game - p5.js</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #f0f0f0; }
+    #canvas-container { 
+      width: 100vw; 
+      height: 100vh; 
+      display: flex; 
+      justify-content: center; 
+      align-items: center; 
+    }
+    .back-link { 
+      position: fixed; 
+      top: 20px; 
+      left: 20px; 
+      background: white; 
+      padding: 10px 20px; 
+      border-radius: 8px; 
+      text-decoration: none; 
+      color: #333; 
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1); 
+      z-index: 1000;
+    }
+  </style>
+</head>
+<body>
+  <a href="../index.html" class="back-link">← Back</a>
+  <div id="canvas-container"></div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/addons/p5.sound.min.js"></script>
+  <script type="module">
+    import { drawStage } from "./scenes/Level1Scene.mjs";
+    import { drawScene2 } from "./scenes/Level2Scene.mjs";
+    import { drawScene3 } from "./scenes/Level3Scene.mjs";
+    import { drawScene4 } from "./scenes/Level4Scene.mjs";
+    import { drawScene5, keyPressedLevel5, setupLevel5 } from "./scenes/Level5Scene.mjs";
+    import { gameOverScreen, splashScreen, winScreen } from "./scenes/SceneManager.mjs";
+    import { gameSettings, gravitySettings, player, SCENES } from "./utils.mjs";
+
+    let mario, cuberos, brick, jumpSound, gameFont, coinSprite, yellowBag, microphone, boom;
+
+    function preload() {
+      mario = loadImage("./public/img/8bit_Mario.png");
+      cuberos = loadImage("./public/img/icon.jpeg");
+      brick = loadImage("./public/img/mario_bricks.jpeg");
+      jumpSound = loadSound("./public/Mario-jump-sound.mp3");
+      gameFont = loadFont("./public/smbfont.ttf");
+      coinSprite = loadImage("./public/img/mario_coin.png");
+      yellowBag = loadImage("./public/img/maletita.png");
+      boom = loadImage("./public/img/boom.png");
+      microphone = loadImage("./public/img/radioMicros.png");
+    }
+
+    function setup() {
+      let cnv = createCanvas(1280, 720);
+      cnv.parent("canvas-container");
+      background("#000");
+      rectMode(CENTER);
+      textAlign(CENTER);
+      imageMode(CENTER);
+      player.x = width / 2;
+      player.y = height - 100 - player.height / 2;
+      gravitySettings.minHeight = height - 100;
+      setupLevel5();
+    }
+
+    function draw() {
+      if (gameSettings.stage === SCENES.SPLASH) {
+        splashScreen(gameFont);
+      } else if (gameSettings.stage === SCENES.LEVEL_1) {
+        gameSettings.totalTime = millis();
+        drawStage(width, height, brick, coinSprite, gameFont);
+        applyGravity();
+        playerMovement();
+      } else if (gameSettings.stage === SCENES.LEVEL_2) {
+        drawScene2(yellowBag, boom, microphone);
+        applyGravity();
+        playerMovement();
+      } else if (gameSettings.stage === SCENES.LEVEL_3) {
+        drawScene3();
+        applyGravity();
+        playerMovement();
+      } else if (gameSettings.stage === SCENES.LEVEL_4) {
+        drawScene4();
+        applyGravity();
+        playerMovement();
+      } else if (gameSettings.stage === SCENES.LEVEL_5) {
+        drawScene5();
+      } else if (gameSettings.stage === SCENES.WIN) {
+        winScreen(gameFont);
+      } else if (gameSettings.stage === SCENES.GAME_OVER) {
+        gameOverScreen(gameFont);
+      }
+    }
+
+    function keyPressed() {
+      if (key === "p") {
+        isCuberos = !isCuberos;
+      }
+      if (keyCode === ENTER && gameSettings.stage === SCENES.SPLASH) {
+        gameSettings.stage = SCENES.LEVEL_1;
+      }
+      if (keyCode === ENTER && gameSettings.stage === SCENES.GAME_OVER) {
+        gameSettings.stage = SCENES.SPLASH;
+        player.lives = 3;
+        gameSettings.score = 0;
+        player.resetPosition();
+      }
+      if (gameSettings.stage === SCENES.LEVEL_5) {
+        keyPressedLevel5();
+      }
+    }
+
+    function applyGravity() {
+      if (player.y >= gravitySettings.minHeight && player.jump === false) {
+        player.y += 0;
+        player.jumpCounter = 0;
+      } else {
+        player.y += gravitySettings.velocity * gravitySettings.direction;
+      }
+      if (player.jump) {
+        if (player.y <= gravitySettings.maxHeight - 200 || player.jumpCounter > player.jumpPower) {
+          if (player.y >= gravitySettings.minHeight) {
+            player.y = gravitySettings.minHeight;
+          }
+          gravitySettings.direction = 1;
+          gravitySettings.velocity = gravitySettings.failingSpeed;
+        } else {
+          gravitySettings.direction = -1;
+          gravitySettings.velocity = player.jumpPower;
+          player.jumpCounter++;
+        }
+        player.jump = false;
+      } else {
+        gravitySettings.direction = 1;
+        gravitySettings.velocity = gravitySettings.failingSpeed;
+      }
+    }
+
+    function playerMovement() {
+      let isWalking = false;
+      if (keyIsDown(LEFT_ARROW)) {
+        player.x -= player.velocity;
+        isWalking = true;
+      }
+      if (keyIsDown(RIGHT_ARROW)) {
+        player.x += player.velocity;
+        isWalking = true;
+      }
+      if (keyIsDown(65)) {
+        player.jump = true;
+      } else {
+        player.jump = false;
+      }
+      player.isWalking = isWalking;
+      if (player.x + player.width < 0) {
+        player.x = width + player.width / 2;
+      }
+      if (player.x - player.width > width) {
+        player.x = 0 - player.width / 2;
+      }
+    }
+
+    window.preload = preload;
+    window.setup = setup;
+    window.draw = draw;
+    window.keyPressed = keyPressed;
+  </script>
+</body>
+</html>
