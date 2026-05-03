@@ -621,7 +621,7 @@ function drawAmmoBar() {
   text(
     `Ammo: ${ovni.ammunition}/${ovni.maxAmmunition}`,
     width - 10,
-    barY + barHeight + 5
+    barY + barHeight + 5,
   );
 
   // Warning text when out of ammo

@@ -8,7 +8,11 @@ function setup() {
   const carAmount = 20;
   for (let i = 0; i < carAmount; i++) {
     cars.push(
-      new Car(width / 8, (i * height) / carAmount, height / (carAmount + 4) + i)
+      new Car(
+        width / 8,
+        (i * height) / carAmount,
+        height / (carAmount + 4) + i,
+      ),
     );
   }
 }

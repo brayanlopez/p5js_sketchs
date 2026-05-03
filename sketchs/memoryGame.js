@@ -23,7 +23,7 @@ function draw() {
         (i * width) / length,
         (j * height) / length,
         width / length,
-        height / length
+        height / length,
       );
     }
   }

@@ -1,0 +1,36 @@
+{
+  "name": "p5js_sketchs",
+  "version": "1.0.0",
+  "description": "Este repositorio contiene experimentos y proyectos realizados con [P5.js](https://p5js.org/).",
+  "homepage": "https://github.com/brayanlopez/p5js_sketchs#readme",
+  "bugs": {
+    "url": "https://github.com/brayanlopez/p5js_sketchs/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/brayanlopez/p5js_sketchs.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "dev": "python -m http.server",
+    "test": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "lint": "eslint js/**/*.mjs",
+    "format": "prettier --write '**/*.{js,json,css,html}'"
+  },
+  "devDependencies": {
+    "@eslint/css": "1.2.0",
+    "@eslint/js": "10.0.1",
+    "@eslint/json": "1.2.0",
+    "@eslint/markdown": "8.0.1",
+    "@vitest/coverage-v8": "4.1.4",
+    "eslint": "10.3.0",
+    "globals": "17.6.0",
+    "jsdom": "^29.1.1",
+    "prettier": "3.8.3",
+    "vitest": "4.1.4"
+  }
+}

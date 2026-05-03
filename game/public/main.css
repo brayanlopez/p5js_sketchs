@@ -21,7 +21,9 @@ canvas {
   height: 100vh;
   padding: 15px;
   background: linear-gradient(135deg, #cf876f 0%, #1b373d 100%);
-  box-shadow: 0 0 60px 10px #000a, 0 0 0 8px #795349 inset;
+  box-shadow:
+    0 0 60px 10px #000a,
+    0 0 0 8px #795349 inset;
   border: 18px solid #338fa2;
 }
 
