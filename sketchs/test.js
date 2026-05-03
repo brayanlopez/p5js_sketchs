@@ -11,7 +11,7 @@ function draw() {
   pineros(mouseX, mouseY);
 }
 
-function pineros(x, y) {
+export function pineros(x, y) {
   //cuello
   noStroke();
   fill("#FFE8CC");

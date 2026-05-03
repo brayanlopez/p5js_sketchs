@@ -35,11 +35,13 @@ const palette = {
  * Height of the sun above the horizon.
  * @type {number}
  */
-let sunHeight = 0;
+export let sunHeight = 0;
+export let increaseLimit;
 
-let increaseLimit;
+export let keyHaveBeenPress = false;
 
-let keyHaveBeenPress = false;
+export const setSunHeight = (value) => { sunHeight = value; };
+export const setIncreaseLimit = (value) => { increaseLimit = value; };
 
 const cactusCoordinates = [];
 const clouds = [];
@@ -87,7 +89,7 @@ function draw() {
     drawMountains();
     drawSandGround();
     cactusCoordinates.forEach((cactus) =>
-      drawCactus(cactus.x, height * 0.8, cactus.size)
+      drawCactus(cactus.x, height * 0.8, cactus.size),
     );
 
     animationLogic();
@@ -102,7 +104,7 @@ function draw() {
     text(
       "Oprime ↑ y ↓ para ver la magia \nCualquier tecla para ocultar texto\ns: guardar",
       width / 20,
-      height / 10
+      height / 10,
     );
 }
 
@@ -130,7 +132,7 @@ const saveImage = () => {
   // }
 };
 
-function drawCloud(x, y) {
+export function drawCloud(x, y) {
   fill(255); // White color for the cloud
   ellipse(x, y, 80, 60);
   ellipse(x - 40, y + 10, 60, 50);
@@ -146,7 +148,7 @@ function drawSandGround() {
   rect(0, sandHeight, width, height * 0.25);
 }
 
-function drawCactus(x, y, size = 10) {
+export function drawCactus(x, y, size = 10) {
   fill(34, 139, 34); // Dark green cactus color
   // rect(x, y, 1, 1);
   noStroke();
@@ -174,13 +176,13 @@ function drawCactus(x, y, size = 10) {
     x - (size * 5) / 30,
     y + (size * 25) / 30,
     x - (size * 5) / 30,
-    y + (size * 55) / 30
+    y + (size * 55) / 30,
   );
   line(
     x + (size * 37) / 30,
     y + (size * 2) / 3,
     x + (size * 37) / 30,
-    y + size * 2
+    y + size * 2,
   );
 
   noStroke();
@@ -195,7 +197,7 @@ const drawGradientBackground = () => {
     let c = lerpColor(
       color(...palette.skyTop),
       color(...palette.skyBottom),
-      inter
+      inter,
     );
     stroke(c);
     line(0, y, width, y);
@@ -224,7 +226,7 @@ const drawMountains = () => {
     width * 0.85,
     height * 0.6,
     width * 1.3,
-    height
+    height,
   );
 
   fill(...palette.mountain2);
@@ -243,7 +245,7 @@ const drawMountains = () => {
 /**
  * Handles sun animation logic based on key input.
  */
-const animationLogic = () => {
+export const animationLogic = () => {
   if (keyIsPressed && key === "ArrowUp") {
     sunHeight += 10;
     sunHeight = constrain(sunHeight, 0, increaseLimit);
@@ -256,7 +258,7 @@ const animationLogic = () => {
 /**
  * Particle class for explosion effect.
  */
-class ExplosionParticle {
+export class ExplosionParticle {
   /**
    * @param {number} x - Initial x position
    * @param {number} y - Initial y position
@@ -272,7 +274,7 @@ class ExplosionParticle {
       random(200, 255),
       random(100, 255),
       random(0, 80),
-      this.life
+      this.life,
     );
     this.vx = cos(this.angle) * this.speed;
     this.vy = sin(this.angle) * this.speed;
@@ -343,7 +345,7 @@ function drawExplosion() {
   // }
 }
 
-class Cloud {
+export class Cloud {
   constructor(x, y, size = null) {
     this.x = x;
     this.y = y;

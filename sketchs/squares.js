@@ -3,7 +3,7 @@ const container = document.getElementById("canvas-container");
 let primaryColor = "#000";
 let secondaryColor = "#fff";
 
-class Square {
+export class Square {
   constructor(x, y, status, width, height) {
     this.x = x;
     this.y = y;
@@ -44,11 +44,11 @@ function draw() {
     text(
       " Click sobre los cuadros \n Oprime 0-5 para cambiar cuadros \n 6-9 para colores",
       width / 20,
-      height / 10
+      height / 10,
     );
 }
 
-function mousePressed() {
+export const handleMousePress = () => {
   const col = Math.floor(mouseX / (width / cols));
   const row = Math.floor(mouseY / (height / rows));
   if (
@@ -62,10 +62,10 @@ function mousePressed() {
     // Only redraw the affected square
     matrixSquares[row][col].draw();
   }
-}
+};
 
-function keyPressed() {
-  keyIsNumber = /\d/.test(key);
+export const handleKeyPress = (key) => {
+  const keyIsNumber = /\d/.test(key);
 
   if (keyIsNumber && parseInt(key) < 6) {
     rows = 2 ** parseInt(key);
@@ -77,9 +77,9 @@ function keyPressed() {
     if (key == 8) primaryColor = "#00f";
     if (key == 9) primaryColor = "#000";
   }
-}
+};
 
-const createSquares = () => {
+export const createSquares = () => {
   matrixSquares = Array.from({ length: rows }, () => Array(cols));
   for (let i = 0; i < rows; i++) {
     for (let j = 0; j < cols; j++) {
@@ -88,7 +88,7 @@ const createSquares = () => {
         (i * height) / rows,
         "outlined",
         width / cols,
-        height / rows
+        height / rows,
       );
       matrixSquares[i][j] = square;
     }
